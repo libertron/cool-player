@@ -19,7 +19,7 @@ class Player extends React.Component {
 		duration : 0,
 		options : {
 			preload : "true",
-			volume : 10,
+			volume : 50,
 			playindex : 0,
 			controls	: true,
 			autoPlay	: false,
@@ -39,16 +39,39 @@ class Player extends React.Component {
 		})
 	}
 
+	setTime = (value) => {
+		const time = (this.state.duration * value) / 100;
+		this.audio.currentTime = time;
+	}
+
+	setVolume = (value) => {
+		this.setState(prevState =>{
+			this.audio.volume=value/100;
+			prevState.options.volume = value;
+			return {
+				...prevState,
+			}
+		});
+	};
+
+	onVolumeChange	= (e) => {
+		console.log("VOLUME",this.audio.volume);
+		console.log("State",this.state);
+		
+	}
+
+
 	stop = () => {
 		this.audio.pause();
 		this.audio.currentTime=0;
 		this.setState({isPlaying : false});
 	}
 
-	onPlay = (e) => console.log("ON_PLAY",e.target);
-	onPause = (e) => console.log("ON_PAUSE",e.target);
-	onVolumeChange	= (e) => console.log("ON_VOLUME_CHANGE",e.target);
-	onLoad = (e) => console.log("ON_LOAD",e.target);
+	// onPlay = (e) => console.log("ON_PLAY",e.target);
+	// onPause = (e) => console.log("ON_PAUSE",e.target);
+	// onLoad = (e) => console.log("ON_LOAD",e.target);
+	// onSeeked =   (e) => console.log("ON_SEEKED",e.target);
+
 	onProgress = (e) => {
 		const duration = this.audio.duration.toFixed(0);
 		const time = this.audio.currentTime.toFixed(0);
@@ -57,18 +80,21 @@ class Player extends React.Component {
 			listened : formatTime(time),
 		});
 	};
-	onSeeked =   (e) => console.log("ON_SEEKED",e.target);
 
 	onTimeUpdate = (e) => {
-		const duration = this.audio.duration;
-		const time = this.audio.currentTime;
+		const duration = this.audio.duration.toFixed(0);
+		const time = this.audio.currentTime.toFixed(0);
 		const percent = Math.ceil((time / duration) * 100);
 
 		this.setState({
-			duration : formatTime(duration.toFixed(0)),
-			listened : formatTime(time.toFixed(0)),
+			duration : formatTime(duration),
+			listened : formatTime(time),
 			progressPercent : percent
 		})
+
+		if (this.audio.ended)
+			this.setState({isPlaying : false});
+
 		console.log("TIME",time);
 		console.log("DURATION",formatTime(duration));
 		console.log("PERCENT",percent);
@@ -115,11 +141,10 @@ class Player extends React.Component {
 
 					<div className={css.volume} style={{flexBasis : '10%'}}>
 						<FontAwesomeIcon  icon={faVolumeUp} size="lg"/>
-						<Slider 
+						<Slider
+							value = {this.state.options.volume}
 							style={{width : '60%'}}
-							onBeforeChange={(e)=>log("BeforeChange",e)}
-							onChange={(e)=>log("Change",e)}
-							onAfterChange={(e)=>log("AfterChange",e)}
+							onChange={(e)=>this.setVolume(e)}
 						/>
 					</div>
 				</div>
