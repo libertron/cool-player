@@ -35,6 +35,12 @@ class Player extends React.Component {
 		})
 	}
 
+	stop = () => {
+		this.audio.pause();
+		this.audio.currentTime=0;
+		this.setState({isPlaying : false});
+	}
+	
 	onPlay = (e) => console.log("ON_PLAY",e.target);
 	onPause = (e) => console.log("ON_PAUSE",e.target);
 	onVolumeChange	= (e) => console.log("ON_VOLUME_CHANGE",e.target);
@@ -77,7 +83,7 @@ class Player extends React.Component {
 							<span style={{marginRight : '12px'}}>00:00</span>
 							<Slider
 								style={{width : '76%'}}
-								onBeforeChange={(e)=>log("BeforeChange",e)}
+								onBeforeChange={(e)=>log("BeforeChange",e)}	
 								onChange={(e)=>log("Change",e)}
 								onAfterChange={(e)=>log("AfterChange",e)}
 							/>
