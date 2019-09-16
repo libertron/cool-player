@@ -4,7 +4,7 @@ import Player from './components/Player';
 function App() {
   return (
     <div className="App">
-      <Player />
+      <Player autoplay/>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 
 .Player{
-    border : 1px solid black;
+    background: #05131a4d;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,7 +14,7 @@
 .volume{order : 4;}
 
 .Player>div{
-    border : 1px solid black;
+    /* border : 1px solid black; */
     height: 90%;   
 }
 
