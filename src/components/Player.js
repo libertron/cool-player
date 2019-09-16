@@ -1,5 +1,6 @@
 import React from 'react';
 import audio1 from '../assets/audio/1.mp3';
+import formatTime from './utils';
 import css from './Player.module.css';
 import 'rc-slider/assets/index.css';
 import Slider from 'rc-slider';
@@ -13,6 +14,9 @@ class Player extends React.Component {
 
 	state = {
 		isPlaying : false,
+		listened : 0,
+		progressPercent : 0,
+		duration : 0,
 		options : {
 			preload : "true",
 			volume : 10,
@@ -40,17 +44,36 @@ class Player extends React.Component {
 		this.audio.currentTime=0;
 		this.setState({isPlaying : false});
 	}
-	
+
 	onPlay = (e) => console.log("ON_PLAY",e.target);
 	onPause = (e) => console.log("ON_PAUSE",e.target);
 	onVolumeChange	= (e) => console.log("ON_VOLUME_CHANGE",e.target);
 	onLoad = (e) => console.log("ON_LOAD",e.target);
 	onProgress = (e) => {
-		console.log("THIS",this);
-		this.setState({audioPlayer:e.target});
+		const duration = this.audio.duration.toFixed(0);
+		const time = this.audio.currentTime.toFixed(0);
+		this.setState({
+			duration : formatTime(duration),
+			listened : formatTime(time),
+		});
 	};
 	onSeeked =   (e) => console.log("ON_SEEKED",e.target);
-	onTimeUpdate = (e) => console.log("ON_TIME_UPDATE",e.target);
+
+	onTimeUpdate = (e) => {
+		const duration = this.audio.duration;
+		const time = this.audio.currentTime;
+		const percent = Math.ceil((time / duration) * 100);
+
+		this.setState({
+			duration : formatTime(duration.toFixed(0)),
+			listened : formatTime(time.toFixed(0)),
+			progressPercent : percent
+		})
+		console.log("TIME",time);
+		console.log("DURATION",formatTime(duration));
+		console.log("PERCENT",percent);
+		
+	}
 
 	render(){
 		const log = (e,type) => console.log(type,e);
@@ -80,14 +103,13 @@ class Player extends React.Component {
 							<FontAwesomeIcon  icon={faPlay} size="sm" onClick = { this.state.next }/>
 						</div>
 						<div>
-							<span style={{marginRight : '12px'}}>00:00</span>
+							<span style={{marginRight : '12px'}}>{this.state.listened}</span>
 							<Slider
 								style={{width : '76%'}}
-								onBeforeChange={(e)=>log("BeforeChange",e)}	
 								onChange={(e)=>log("Change",e)}
-								onAfterChange={(e)=>log("AfterChange",e)}
+								value={this.state.progressPercent}
 							/>
-							<span style={{marginLeft : '6px'}}>00:00</span>
+							<span style={{marginLeft : '6px'}}>{this.state.duration}</span>
 						</div>
 					</div>
 
