@@ -98,7 +98,12 @@ class Player extends React.Component {
 				case 'chrome':
 					break;
 				case 'firefox':
-					console.log(navigator.permissions.query);
+					// navigator.mediaDevices.enumerateDevices(
+					// 	res => console.log(e),
+					// 	res => console.log(e)
+					// );
+					console.log(navigator);
+					
 					this.audio.muted=true;
 				  break;
 				case 'edge':
